@@ -1,6 +1,6 @@
 **ClubHub - Campus Club \& Event Manager**
 
-ClubHub is a lightweight, single-file web application built with Flask and TinyDB. It allows campus communities to manage clubs, host events, and let users register for activities ranging from Hackathons to Comedy Nights.
+ClubHub is a lightweight, single-file web application built with Flask . It allows campus communities to manage clubs, host events, and let users register for activities ranging from Hackathons to Comedy Nights.
 
 It features a colorful, modern interface.
 
