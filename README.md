@@ -8,7 +8,7 @@ It features a colorful, modern interface.
 
 **Features:**
 
-1. User Authentication: Secure Signup, Login, and Logout functionality.
+1\. User Authentication: Secure Signup, Login, and Logout functionality.
 
 2\. Club Management:
 
