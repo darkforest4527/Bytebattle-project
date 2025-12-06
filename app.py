@@ -5,18 +5,18 @@ from flask import Flask, request, redirect, url_for, flash, get_flashed_messages
 from tinydb import TinyDB, Query
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# --- CONFIGURATION ---
-app = Flask(__name__)
-app.secret_key = 'super_secret_key_for_sessions'
 
-# --- DATABASE SETUP (Local, No-SQL) ---
-db = TinyDB('db.json')
-clubs_table = db.table('clubs')
-events_table = db.table('events')
-users_table = db.table('users')
-registrations_table = db.table('registrations')
+app =Flask(__name__)
+app.secret_key ='super_secret_key_for_sessions'
 
-# --- INITIALIZE SAMPLE DATA ---
+
+db =TinyDB('db.json')
+clubs_table =db.table('clubs')
+events_table =db.table('events')
+users_table =db.table('users')
+registrations_table =db.table('registrations')
+
+
 def initialize_sample_data():
     """
     Populates the database with sample clubs and events if it is empty.
@@ -27,23 +27,23 @@ def initialize_sample_data():
             {
                 'name': 'Campus Tech',
                 'description': 'Coding, gadgets, and all things tech. We host hackathons and workshops.',
-                'leader': 'Alice System',
+                'leader': 'Alice ',
                 'founded': '2023-01-15',
-                'created_by': 'system'
+                
             },
             {
                 'name': 'Drama Club',
-                'description': 'Theater, improv, and stage production. Come express yourself!',
-                'leader': 'Bob System',
+                'description': 'Theater, and stage production. Come express yourself!',
+                'leader': 'Bob',
                 'founded': '2023-03-10',
-                'created_by': 'system'
+                
             },
             {
                 'name': 'Green Earth',
                 'description': 'Sustainability initiatives and community gardening.',
-                'leader': 'Charlie Green',
+                'leader': 'Charlie',
                 'founded': '2023-04-22',
-                'created_by': 'system'
+                
             }
         ])
 
@@ -59,7 +59,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=14)).strftime("%Y-%m-%d"),
                 'location': 'Engineering Block A',
                 'description': 'A 24-hour coding marathon. Build amazing projects and win prizes! Open to all majors.',
-                'created_by': 'system'
+                
             },
             {
                 'id': str(uuid.uuid4()),
@@ -69,7 +69,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
                 'location': 'Student Center Auditorium',
                 'description': 'Join us for a night of laughs! Audience participation is encouraged but not required.',
-                'created_by': 'system'
+                
             },
             {
                 'id': str(uuid.uuid4()),
@@ -79,7 +79,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=2)).strftime("%Y-%m-%d"),
                 'location': 'Lab 304',
                 'description': 'Learn the basics of Python programming. No prior experience needed. Bring your laptop!',
-                'created_by': 'system'
+                
             },
              {
                 'id': str(uuid.uuid4()),
@@ -89,11 +89,11 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
                 'location': 'North Garden',
                 'description': 'Help us prepare the garden for spring planting. Snacks provided!',
-                'created_by': 'system'
+                
             }
         ])
 
-# --- TEMPLATES (HTML/CSS Strings) ---
+
 STYLES = """
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -537,7 +537,7 @@ def render_page(content, hero_html=""):
     </html>
     """
 
-# --- ERROR HANDLER ---
+
 @app.errorhandler(404)
 def page_not_found(e):
     content = """
@@ -550,7 +550,7 @@ def page_not_found(e):
     """
     return render_page(content), 404
 
-# --- AUTH ROUTES ---
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -614,13 +614,13 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-# --- APP ROUTES ---
+
 @app.route('/')
 def home():
     current_user = session.get('username')
     all_events = events_table.all()
     
-    # Auto-migrate
+
     for event in all_events:
         if 'id' not in event:
             new_id = str(uuid.uuid4())
@@ -671,7 +671,7 @@ def home():
             if not current_user:
                 main_btn = '<a href="/login" class="btn btn-outline" style="width:100%">Login to Register</a>'
             elif event.get('id') in my_registrations:
-                # UNREGISTER BUTTON LOGIC
+              
                 main_btn = f"""
                 <form action="/unregister_from_event/{event.get('id')}" method="POST" onsubmit="return confirm('Do you want to unregister from this event?');">
                     <button type="submit" class="btn btn-registered" style="width:100%">✓ Registered (Undo)</button>
@@ -751,7 +751,7 @@ def unregister_from_event(event_id):
     user = session['username']
     
     Registration = Query()
-    # Remove entry where both event_id and username match
+   
     registrations_table.remove((Registration.event_id == event_id) & (Registration.username == user))
     
     flash('Successfully unregistered from event.', 'info')
