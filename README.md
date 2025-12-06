@@ -1,37 +1,35 @@
-**ClubHub - Campus Club & Event Manager**
+**ClubHub - Campus Club \& Event Manager**
 
 ClubHub is a lightweight, single-file web application built with Flask and TinyDB. It allows campus communities to manage clubs, host events, and let users register for activities ranging from Hackathons to Comedy Nights.
 
-It features a colorful, modern interface and requires no external database setup (SQL-free).
+It features a colorful, modern interface.
 
-✨ Features
 
-User Authentication: Secure Signup, Login, and Logout functionality.
 
-Club Management:
+**Features:**
 
-Register new clubs.
+1. User Authentication: Secure Signup, Login, and Logout functionality.
 
-View the directory of all active clubs.
+2\. Club Management:
 
-Club creators can delete their clubs (and associated events).
+3\. Register new clubs.
 
-Event Management:
+4\. View the directory of all active clubs.
 
-Host events linked to specific clubs.
+5\. Club creators can delete their clubs (and associated events).
 
-Categorize events (Competition, Comedy, Workshop, etc.).
+6\. Event Management:
 
-Event creators can delete their events.
+7\. Host events linked to specific clubs.
 
-Participation:
+8\. Categorize events.
 
-Users can Register for events with one click.
+9\. Event creators can delete their events.
 
-Users can Unregister if they change their mind.
 
-Dashboard view shows which events you are attending.
 
-Sample Data: Automatically populates with demo clubs and events on first run.
+**Participation:**
 
-Responsive Design: Modern UI with colorful gradients and mobile-friendly layout.
+* Users can Register for events with one click.
+* Users can Unregister if they change their mind.
+* Responsive Design: Modern UI with colorful gradients and mobile-friendly layout.
