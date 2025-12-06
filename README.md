@@ -28,7 +28,7 @@ It features a colorful, modern interface.
 
 
 
-**Participation:**
+**Users:**
 
 * Users can Register for events with one click.
 * Users can Unregister if they change their mind.
