@@ -19,24 +19,24 @@ def intialize_sample_data():
         print("Initializing sample clubs...")
         clubs_table.insert_multiple([
             {
-                'name': 'Campus Tech',
-                'description': 'This is the place for gadgets and tech nerds',
-                'leader': 'Alice',
-                'founded': '2023-01-15',
+            'name': 'Campus Tech',
+            'description': 'This is the place for gadgets and tech nerds',
+            'leader': 'Alice',
+            'founded': '2023-01-15',
                 
             },
             {
-                'name': 'Drama Club',
-                'description': 'Come discover a bundle of joys',
-                'leader': 'Sofia',
-                'founded': '2023-03-10',
+            'name': 'Drama Club',
+            'description': 'Come discover a bundle of joys',
+            'leader':'Sofia',
+            'founded': '2023-03-10',
                 
             },
             {
-                'name': 'Green Earth',
-                'description': 'There is only planet A',
-                'leader': 'Charles',
-                'founded': '2023-04-22',
+            'name': 'Green Earth',
+            'description': 'There is only planet A',
+            'leader': 'Charles',
+            'founded': '2023-04-22',
                 
             }
         ])
@@ -45,44 +45,43 @@ def intialize_sample_data():
         today = datetime.date.today()
         events_table.insert_multiple([
             {
-                'id': str(uuid.uuid4()),
-                'title': 'Hackathon 2025',
-                'club_name': 'Campus Tech',
-                'type': 'Competition',
-                'date': (today + datetime.timedelta(days=14)).strftime("%Y-%m-%d"),
-                'location': 'Engineering Block A',
-                'description': 'A 24-hour coding marathon. Build amazing projects and win prizes! Open to all majors.',
+            'id':str(uuid.uuid4()),
+            'title':'Hackathon 2025',
+            'club_name':'Campus Tech',
+            'type':'Competition',
+            'date':(today + datetime.timedelta(days=14)).strftime("%Y-%m-%d"),
+            'location':'Engineering Block A',
+            'description':'A 24-hour coding marathon. Build amazing projects and win prizes! Open to all majors.',
                 
             },
             {
-                'id': str(uuid.uuid4()),
-                'title': 'Comedy Night',
-                'club_name': 'Drama Club',
-                'type': 'Comedy',
-                'date': (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
-                'location': ' Center Auditorium',
-                'description': 'Join us for a night of laughs! Audience participation is encouraged .',
+            'id':str(uuid.uuid4()),
+            'title':'Comedy Night',
+            'club_name':'Drama Club',
+            'type':'Comedy',
+            'date':(today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
+            'location':' Center Auditorium',
+            'description':'Join us for a night of laughs! Audience participation is encouraged .',
                 
             },
             {
-                'id': str(uuid.uuid4()),
-                'title': 'Python Workshop',
-                'club_name': 'Campus Tech',
-                'type': 'Workshop',
-                'date': (today + datetime.timedelta(days=2)).strftime("%Y-%m-%d"),
-                'location': 'Computer Lab',
-                'description': 'Learn the basics of Python programming. No prior experience needed. Bring your laptop!',
+            'id':str(uuid.uuid4()),
+            'title':'Python Workshop',
+            'club_name':'Campus Tech',
+            'type':'Workshop',
+            'date':(today + datetime.timedelta(days=2)).strftime("%Y-%m-%d"),
+            'location':'Computer Lab',
+            'description':'Learn the basics of Python programming. No prior experience needed. Bring your laptop!',
                 
             },
              {
-                'id': str(uuid.uuid4()),
-                'title': 'Community Garden Cleanup',
-                'club_name': 'Green Earth',
-                'type': 'Social',
-                'date': (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
-                'location': 'North Garden',
-                'description': 'Help us prepare the garden for spring planting. Snacks provided!',
-                'created_by': 'system'
+            'id':str(uuid.uuid4()),
+            'title':'Community Garden Cleanup',
+            'club_name':'Green Earth',
+            'type':'Social',
+            'date':(today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+            'location':'North Garden',
+            'description':'Help us prepare the garden for spring planting. Snacks provided!',
             }
         ])
 
@@ -90,64 +89,64 @@ STYLES = """
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     :root {
-        --primary: #6366f1; /* Indigo */
-        --primary-dark: #4f46e5;
-        --secondary: #8b5cf6; /* Violet */
-        --danger: #ef4444;
-        --success: #10b981;
-        --bg: #f3f4f6;
-        --card-bg: #ffffff;
-        --text-main: #1f2937;
-        --text-muted: #6b7280;
-        --border: #e5e7eb;
+    primary: #6366f1; /* Indigo */
+    primary-dark: #4f46e5;
+    secondary: #8b5cf6; /* Violet */
+    danger: #ef4444;
+    success: #10b981;
+    bg: #f3f4f6;
+    card-bg: #ffffff;
+    text-main: #1f2937;
+    text-muted: #6b7280;
+    border: #e5e7eb;
     }
     
     * { box-sizing: border-box; }
 
     body { 
-        background-color: var(--bg); 
-        font-family: 'Inter', sans-serif; 
-        color: var(--text-main); 
-        margin: 0; 
-        line-height: 1.6;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        -webkit-font-smoothing: antialiased;
+    background-color: var(--bg); 
+    font-family: 'Inter', sans-serif; 
+    color: var(--text-main); 
+    margin: 0; 
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
     }
     
     .main-content {
-        flex: 1;
-        width: 100%;
+    flex: 1;
+    width: 100%;
     }
 
     /* Navbar */
     .nav { 
-        background-color: #ffffff; 
-        border-bottom: 1px solid var(--border); 
-        padding: 1rem 0; 
-        position: sticky; 
-        top: 0; 
-        z-index: 50; 
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff; 
+    border-bottom: 1px solid var(--border); 
+    padding: 1rem 0; 
+    position: sticky; 
+    top: 0; 
+    z-index: 50; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
     .nav-container { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        max-width: 1200px; 
-        margin: 0 auto; 
-        padding: 0 1.5rem; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 0 1.5rem; 
     }
     .nav-brand { 
-        font-size: 1.5rem; 
-        font-weight: 800; 
-        color: var(--primary); 
-        text-decoration: none; 
-        letter-spacing: -0.025em;
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    font-size: 1.5rem; 
+    font-weight: 800; 
+    color: var(--primary); 
+    text-decoration: none; 
+    letter-spacing: -0.025em;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     }
     .nav-links { display: flex; align-items: center; gap: 2rem; }
     .nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; font-size: 0.95rem; }
@@ -155,51 +154,51 @@ STYLES = """
     
     /* Hero Section - Colorful Gradient */
     .hero { 
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
-        padding: 5rem 1.5rem; 
-        text-align: center; 
-        margin-bottom: 3rem;
-        color: white;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+    padding: 5rem 1.5rem; 
+    text-align: center; 
+    margin-bottom: 3rem;
+    color: white;
     }
     .hero h1 { 
-        margin: 0; 
-        font-size: 3.5rem; 
-        font-weight: 900; 
-        letter-spacing: -0.04em; 
-        line-height: 1.1; 
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 0; 
+    font-size: 3.5rem; 
+    font-weight: 900; 
+    letter-spacing: -0.04em; 
+    line-height: 1.1; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .hero p { 
-        font-size: 1.35rem; 
-        color: rgba(255, 255, 255, 0.9); 
-        margin-top: 1.5rem; 
-        max-width: 700px; 
-        margin-left: auto; 
-        margin-right: auto; 
-        font-weight: 400;
+    font-size: 1.35rem; 
+    color: rgba(255, 255, 255, 0.9); 
+    margin-top: 1.5rem; 
+    max-width: 700px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    font-weight: 400;
     }
 
     /* Layout */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
     .grid { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
-        gap: 2rem; 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); 
+    gap: 2rem; 
     }
 
     /* Footer */
     .site-footer {
-        background-color: white;
-        border-top: 1px solid var(--border);
-        padding: 3rem 0;
-        margin-top: 5rem;
-        color: var(--text-muted);
+    background-color: white;
+    border-top: 1px solid var(--border);
+    padding: 3rem 0;
+    margin-top: 5rem;
+    color: var(--text-muted);
     }
     .footer-content {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 2rem;
     }
     .footer-col h4 { color: var(--text-main); margin-top: 0; }
     .footer-col ul { list-style: none; padding: 0; }
@@ -207,11 +206,11 @@ STYLES = """
     .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
     .footer-col a:hover { color: var(--primary); }
     .copyright {
-        text-align: center;
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid var(--border);
-        font-size: 0.875rem;
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.875rem;
     }
 
     /* Cards */
@@ -229,16 +228,16 @@ STYLES = """
     overflow: hidden;
     }
     .card:hover { 
-        transform: translateY(-5px); 
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+    transform: translateY(-5px); 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
     }
     /* Color accent line on top of cards */
     .card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 6px;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
     }
     
     .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; margin-top: 0.5rem;}
@@ -247,41 +246,41 @@ STYLES = """
     .card-body { color: #4b5563; margin-bottom: 1.5rem; flex-grow: 1; font-size: 0.95rem; }
     
     .card-meta { 
-        border-top: 1px solid var(--bg); 
-        padding-top: 1rem; 
-        margin-top: auto; 
-        display: flex; 
-        justify-content: space-between; 
-        color: var(--text-muted); 
-        font-size: 0.875rem; 
-        font-weight: 500; 
+    border-top: 1px solid var(--bg); 
+    padding-top: 1rem; 
+    margin-top: auto; 
+    display: flex; 
+    justify-content: space-between; 
+    color: var(--text-muted); 
+    font-size: 0.875rem; 
+    font-weight: 500; 
     }
     .card-actions { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
 
     /* Buttons */
     .btn { 
-        display: inline-flex; 
-        align-items: center; 
-        justify-content: center; 
-        padding: 0.75rem 1.25rem; 
-        border-radius: 0.5rem; 
-        text-decoration: none; 
-        font-weight: 600; 
-        cursor: pointer; 
-        border: none; 
-        font-size: 0.95rem; 
-        transition: all 0.2s; 
-        width: 100%;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 0.75rem 1.25rem; 
+    border-radius: 0.5rem; 
+    text-decoration: none; 
+    font-weight: 600; 
+    cursor: pointer; 
+    border: none; 
+    font-size: 0.95rem; 
+    transition: all 0.2s; 
+    width: 100%;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
     .btn-auto { width: auto; }
     .btn-primary { 
-        background-color: var(--primary); 
-        color: white; 
+    background-color: var(--primary); 
+    color: white; 
     }
     .btn-primary:hover { 
-        background-color: var(--primary-dark); 
-        transform: translateY(-1px);
+    background-color: var(--primary-dark); 
+    transform: translateY(-1px);
     }
     .btn-success { background-color: var(--success); color: white; }
     .btn-danger { background-color: #fff1f2; color: #be123c; border: 1px solid #fda4af; font-size: 0.85rem; padding: 0.4rem; box-shadow: none; }
