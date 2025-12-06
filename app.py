@@ -1,20 +1,20 @@
 import os
 import datetime
 import uuid
-from flask import Flask, request, redirect, url_for, flash, get_flashed_messages, session
+from flask import Flask, request, redirect, url_for, flash, get_flashed_messages, session, jsonify
 from tinydb import TinyDB, Query
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-app =Flask(__name__)
-app.secret_key ='super_secret_key_for_sessions'
+app = Flask(__name__)
+app.secret_key = 'super_secret_key_for_sessions'
 
 
-db =TinyDB('db.json')
-clubs_table =db.table('clubs')
-events_table =db.table('events')
-users_table =db.table('users')
-registrations_table =db.table('registrations')
+db = TinyDB('db.json')
+clubs_table = db.table('clubs')
+events_table = db.table('events')
+users_table = db.table('users')
+registrations_table = db.table('registrations')
 
 
 def initialize_sample_data():
@@ -27,23 +27,23 @@ def initialize_sample_data():
             {
                 'name': 'Campus Tech',
                 'description': 'Coding, gadgets, and all things tech. We host hackathons and workshops.',
-                'leader': 'Alice ',
+                'leader': 'Alice System',
                 'founded': '2023-01-15',
-                
+                'created_by': 'system'
             },
             {
                 'name': 'Drama Club',
-                'description': 'Theater, and stage production. Come express yourself!',
-                'leader': 'Bob',
+                'description': 'Theater, improv, and stage production. Come express yourself!',
+                'leader': 'Bob System',
                 'founded': '2023-03-10',
-                
+                'created_by': 'system'
             },
             {
                 'name': 'Green Earth',
                 'description': 'Sustainability initiatives and community gardening.',
-                'leader': 'Charlie',
+                'leader': 'Charlie Green',
                 'founded': '2023-04-22',
-                
+                'created_by': 'system'
             }
         ])
 
@@ -59,7 +59,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=14)).strftime("%Y-%m-%d"),
                 'location': 'Engineering Block A',
                 'description': 'A 24-hour coding marathon. Build amazing projects and win prizes! Open to all majors.',
-                
+                'created_by': 'system'
             },
             {
                 'id': str(uuid.uuid4()),
@@ -69,7 +69,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
                 'location': 'Student Center Auditorium',
                 'description': 'Join us for a night of laughs! Audience participation is encouraged but not required.',
-                
+                'created_by': 'system'
             },
             {
                 'id': str(uuid.uuid4()),
@@ -79,7 +79,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=2)).strftime("%Y-%m-%d"),
                 'location': 'Lab 304',
                 'description': 'Learn the basics of Python programming. No prior experience needed. Bring your laptop!',
-                
+                'created_by': 'system'
             },
              {
                 'id': str(uuid.uuid4()),
@@ -89,7 +89,7 @@ def initialize_sample_data():
                 'date': (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
                 'location': 'North Garden',
                 'description': 'Help us prepare the garden for spring planting. Snacks provided!',
-                
+                'created_by': 'system'
             }
         ])
 
@@ -112,6 +112,10 @@ STYLES = """
         --input-bg: #ffffff;
         --nav-bg: #ffffff;
         --footer-bg: #ffffff;
+        --chat-bg: #ffffff;
+        --chat-bubble-user: #0d9488;
+        --chat-bubble-bot: #f1f5f9;
+        --chat-text-bot: #334155;
     }
 
     [data-theme="dark"] {
@@ -127,6 +131,10 @@ STYLES = """
         --input-bg: #1e293b;
         --nav-bg: #1e293b;
         --footer-bg: #1e293b;
+        --chat-bg: #1e293b;
+        --chat-bubble-user: #0d9488;
+        --chat-bubble-bot: #334155;
+        --chat-text-bot: #f1f5f9;
     }
     
     * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
@@ -417,6 +425,107 @@ STYLES = """
     .alert-info { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
     
     .empty-state { text-align: center; padding: 6rem 1rem; color: var(--text-muted); }
+
+    /* CHATBOT STYLES */
+    .chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        font-family: 'Inter', sans-serif;
+    }
+    .chat-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: transform 0.2s;
+    }
+    .chat-button:hover {
+        transform: scale(1.05);
+        background-color: var(--primary-dark);
+    }
+    .chat-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 450px;
+        background-color: var(--chat-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        display: none; /* Hidden by default */
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .chat-header {
+        background-color: var(--primary);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+    }
+    .chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .message {
+        max-width: 80%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    .message.bot {
+        align-self: flex-start;
+        background-color: var(--chat-bubble-bot);
+        color: var(--chat-text-bot);
+        border-bottom-left-radius: 2px;
+    }
+    .message.user {
+        align-self: flex-end;
+        background-color: var(--chat-bubble-user);
+        color: white;
+        border-bottom-right-radius: 2px;
+    }
+    .chat-input-area {
+        padding: 15px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 10px;
+        background-color: var(--input-bg);
+    }
+    .chat-input {
+        flex: 1;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        outline: none;
+        background-color: var(--bg);
+        color: var(--text-main);
+    }
+    .chat-send {
+        background: none;
+        border: none;
+        color: var(--primary);
+        cursor: pointer;
+        font-weight: bold;
+    }
 </style>
 """
 
@@ -475,6 +584,25 @@ def render_page(content, hero_html=""):
             </div>
         </div>
     </footer>
+    
+    <!-- CHATBOT WIDGET HTML -->
+    <div class="chat-widget">
+        <button id="chat-toggle" class="chat-button">💬</button>
+        <div id="chat-window" class="chat-window">
+            <div class="chat-header">
+                <span>ClubHub Assistant</span>
+                <span style="cursor:pointer" id="chat-close">×</span>
+            </div>
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot">Hello! I'm the ClubHub bot. Ask me about registering, hosting events, or clubs!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Type a message...">
+                <button id="chat-send" class="chat-send">Send</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- Theme Toggle Logic ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -500,6 +628,59 @@ def render_page(content, hero_html=""):
             function updateIcon(theme) {
                 icon.textContent = theme === 'light' ? '🌙' : '☀️';
             }
+            
+            // --- CHATBOT LOGIC ---
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWindow = document.getElementById('chat-window');
+            const chatClose = document.getElementById('chat-close');
+            const chatInput = document.getElementById('chat-input');
+            const chatSend = document.getElementById('chat-send');
+            const messagesContainer = document.getElementById('chat-messages');
+
+            // Toggle visibility
+            chatToggle.addEventListener('click', () => {
+                chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+            });
+            chatClose.addEventListener('click', () => {
+                chatWindow.style.display = 'none';
+            });
+
+            // Send message function
+            function sendMessage() {
+                const text = chatInput.value.trim();
+                if (!text) return;
+
+                // Add user message
+                addMessage(text, 'user');
+                chatInput.value = '';
+
+                // Call backend
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: text})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    addMessage(data.response, 'bot');
+                })
+                .catch(err => {
+                    addMessage("Sorry, I'm having trouble connecting right now.", 'bot');
+                });
+            }
+
+            function addMessage(text, sender) {
+                const div = document.createElement('div');
+                div.classList.add('message', sender);
+                div.textContent = text;
+                messagesContainer.appendChild(div);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            chatSend.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
         });
     </script>
     """
@@ -510,7 +691,7 @@ def render_page(content, hero_html=""):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Campus Club Hub</title>
+        <title>ClubHub</title>
         {STYLES}
     </head>
     <body>
@@ -549,6 +730,34 @@ def page_not_found(e):
     </div>
     """
     return render_page(content), 404
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    """
+    Simple rule-based chatbot logic.
+    """
+    data = request.get_json()
+    user_msg = data.get('message', '').lower()
+    
+    response = "I'm not sure about that. Try asking about events, clubs, or how to register!"
+    
+    if any(x in user_msg for x in ['hello', 'hi', 'hey']):
+        response = "Hello there! Welcome to ClubHub. How can I help you?"
+    elif 'register' in user_msg:
+        response = "To register for an event, make sure you're logged in, then simply click 'Register Now' on any event card on the home page."
+    elif 'create' in user_msg or 'host' in user_msg:
+        response = "To host an event, click the 'Host Event' button in the navbar. You'll need to register a club first!"
+    elif 'club' in user_msg:
+        response = "You can view all clubs on the 'Clubs' page. If you want to start your own, click 'Register a New Club'."
+    elif 'delete' in user_msg:
+        response = "You can delete events or clubs that YOU created. Look for the red trash icon on the cards."
+    elif 'unregister' in user_msg or 'cancel' in user_msg:
+        response = "To unregister, just click the '✓ Registered' button again on the event card."
+    elif 'who are you' in user_msg:
+        response = "I am the ClubHub Assistant, a simple bot here to help you navigate the site."
+
+    return jsonify({'response': response})
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -620,7 +829,7 @@ def home():
     current_user = session.get('username')
     all_events = events_table.all()
     
-
+ 
     for event in all_events:
         if 'id' not in event:
             new_id = str(uuid.uuid4())
@@ -671,7 +880,7 @@ def home():
             if not current_user:
                 main_btn = '<a href="/login" class="btn btn-outline" style="width:100%">Login to Register</a>'
             elif event.get('id') in my_registrations:
-              
+               
                 main_btn = f"""
                 <form action="/unregister_from_event/{event.get('id')}" method="POST" onsubmit="return confirm('Do you want to unregister from this event?');">
                     <button type="submit" class="btn btn-registered" style="width:100%">✓ Registered (Undo)</button>
@@ -751,7 +960,7 @@ def unregister_from_event(event_id):
     user = session['username']
     
     Registration = Query()
-   
+    
     registrations_table.remove((Registration.event_id == event_id) & (Registration.username == user))
     
     flash('Successfully unregistered from event.', 'info')
@@ -804,6 +1013,7 @@ def list_clubs():
     </div>
     """
     
+   
     hero_section = """
     <div class="hero" style="padding: 3rem 1.5rem; margin-bottom: 0;">
         <div class="container">
