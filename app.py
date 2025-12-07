@@ -5,12 +5,11 @@ from flask import Flask, request, redirect, url_for, flash, get_flashed_messages
 from tinydb import TinyDB, Query
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# --- CONFIGURATION ---
+
 app = Flask(__name__)
 app.secret_key = 'super_secret_key_for_sessions_replace_in_production'
 
-# --- DATABASE SETUP (Local, No-SQL) ---
-# This creates a 'db.json' file in the same directory automatically
+
 db_path = 'db.json'
 db = TinyDB(db_path)
 clubs_table = db.table('clubs')
