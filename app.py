@@ -22,18 +22,21 @@ def initialize_system():
     print("--- SYSTEM STARTUP ---")
     User = Query()
     
+   
     if not users_table.search(User.username == 'admin'):
         users_table.insert({'username': 'admin', 'password': generate_password_hash('123'), 'role': 'admin'})
     if not users_table.search(User.username == 'student'):
         users_table.insert({'username': 'student', 'password': generate_password_hash('123'), 'role': 'student'})
 
+    
     if not clubs_table.all():
         clubs_table.insert_multiple([
-            {'name': 'Campus Tech', 'description': 'Coding, gadgets, and all things tech. We host hackathons and workshops.', 'leader': 'Alice Admin', 'founded': '2023-01-15', 'created_by': 'admin'},
+            {'name': 'Campus Tech', 'description': 'Coding, gadgets, and all things tech.', 'leader': 'Alice Admin', 'founded': '2023-01-15', 'created_by': 'admin'},
             {'name': 'Drama Club', 'description': 'Theater and improv.', 'leader': 'Bob Admin', 'founded': '2023-03-10', 'created_by': 'admin'},
             {'name': 'Green Earth', 'description': 'Sustainability & Gardening.', 'leader': 'Charlie Green', 'founded': '2023-04-22', 'created_by': 'admin'}
         ])
 
+   
     if not events_table.all():
         today = datetime.date.today()
         events_table.insert_multiple([
@@ -43,25 +46,59 @@ def initialize_system():
         ])
     print("--- SYSTEM READY ---")
 
-# --- FRONTEND STYLES (CSS) ---
+
 STYLES = """
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --primary: #0d9488; --primary-dark: #0f766e; --secondary: #14b8a6;
-        --danger: #ef4444; --success: #10b981; --bg: #f8fafc; --card-bg: #ffffff;
-        --text-main: #334155; --text-muted: #64748b; --border: #e2e8f0;
-        --nav-bg: #ffffff; --input-bg: #ffffff;
-        --chat-bg: #ffffff; --chat-user: #0d9488; --chat-bot: #f1f5f9; --chat-text-bot: #334155;
+        /* YOUR CUSTOM PALETTE (Default is now the Dark Lux Look) */
+        --bg: #050505;           /* Rich Black */
+        --card-bg: #1C1C1C;      /* Surface Gunmetal */
+        --nav-bg: #1C1C1C;       
+        --input-bg: #2A2A2A;
+        
+        --text-main: #F5F5F5;    /* White Smoke */
+        --text-muted: #9E9E9E;   /* Dusty Grey */
+        
+        --primary: #D4AF37;      /* Metallic Gold */
+        --primary-dark: #B5952F; /* Darker Gold */
+        --secondary: #C0C0C0;    /* Silver */
+        
+        --accent: #800000;       /* Deep Maroon (Highlight/Danger) */
+        --border: #333333;
+        
+        --success: #10b981;      /* Green for success messages */
+        
+        /* Chatbot Colors */
+        --chat-bg: #1C1C1C;
+        --chat-user: #D4AF37;
+        --chat-bot: #333333;
+        --chat-text-bot: #F5F5F5;
     }
-    [data-theme="dark"] {
-        --primary: #2dd4bf; --primary-dark: #0d9488; --bg: #0f172a;
-        --card-bg: #1e293b; --text-main: #f1f5f9; --text-muted: #94a3b8;
-        --border: #334155; --nav-bg: #1e293b; --input-bg: #1e293b;
-        --chat-bg: #1e293b; --chat-user: #0d9488; --chat-bot: #334155; --chat-text-bot: #f1f5f9;
+
+    /* Light Theme Toggle (Inverted for contrast) */
+    [data-theme="light"] {
+        --bg: #F5F5F5;           /* White Smoke */
+        --card-bg: #FFFFFF;
+        --nav-bg: #FFFFFF;
+        --input-bg: #F0F0F0;
+        
+        --text-main: #050505;    /* Rich Black */
+        --text-muted: #666666;
+        
+        --primary: #B5952F;      /* Darker Gold for visibility on white */
+        --primary-dark: #8A701E;
+        --secondary: #555555;
+        
+        --border: #E0E0E0;
+        --chat-bg: #FFFFFF;
+        --chat-user: #B5952F;
+        --chat-bot: #F0F0F0;
+        --chat-text-bot: #050505;
     }
-    * { box-sizing: border-box; transition: background 0.3s, border 0.3s; }
+
+    * { box-sizing: border-box; transition: background 0.3s, border 0.3s, color 0.3s; }
     body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: var(--text-main); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
     .main-content { flex: 1; width: 100%; }
     
@@ -76,68 +113,81 @@ STYLES = """
     /* Buttons */
     .btn { display: inline-flex; justify-content: center; align-items: center; padding: 0.75rem 1.25rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; width: 100%; transition: all 0.2s; text-decoration: none; }
     .btn-auto { width: auto; }
-    .btn-primary { background: var(--primary); color: white !important; }
+    
+    .btn-primary { background: var(--primary); color: #050505 !important; /* Black text on Gold for readability */ }
     .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    
     .btn-outline { border: 1px solid var(--border); background: transparent; color: var(--text-main); }
-    .btn-danger { color: var(--danger); background: transparent; border: 1px solid var(--danger); font-size: 0.85rem; padding: 0.4rem; }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    
+    .btn-danger { color: #ffcccc; background: var(--accent); border: 1px solid var(--accent); font-size: 0.85rem; padding: 0.4rem; }
+    .btn-danger:hover { background: #660000; }
+    
     .btn-registered { color: var(--success); background: transparent; border: 2px solid var(--success); }
     .btn-registered:hover { background: rgba(16, 185, 129, 0.1); content: "Unregister"; }
-    .btn-nav-primary { background: var(--primary); color: white !important; padding: 0.5rem 1rem; border-radius: 99px; }
-    .btn-nav-secondary { border: 2px solid var(--border); background: transparent; color: var(--text-muted) !important; padding: 0.5rem 1rem; border-radius: 99px; }
+    
+    .btn-nav-primary { background: var(--primary); color: #050505 !important; padding: 0.5rem 1rem; border-radius: 99px; }
+    .btn-nav-secondary { border: 2px solid var(--primary); background: transparent; color: var(--primary) !important; padding: 0.5rem 1rem; border-radius: 99px; }
     
     /* Layout */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem; }
-    .hero { background: linear-gradient(135deg, #115e59 0%, #0d9488 100%); padding: 4rem 1.5rem; text-align: center; color: white; margin-bottom: 3rem; }
-    .hero h1 { margin: 0; font-size: 4rem; font-weight: 700; font-family: 'Dancing Script', cursive; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .hero p { font-size: 1.8rem; color: rgba(255, 255, 255, 0.9); margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto; font-weight: 400; font-family: 'Dancing Script', cursive; }
+    
+    /* Hero - Gradient combining Rich Black and Maroon */
+    .hero { 
+        background: linear-gradient(135deg, #050505 0%, #3d0000 100%); 
+        padding: 4rem 1.5rem; text-align: center; color: var(--text-main); margin-bottom: 3rem; border-bottom: 1px solid var(--border); 
+    }
+    .hero h1 { margin: 0; font-size: 4rem; font-weight: 700; font-family: 'Dancing Script', cursive; line-height: 1.2; color: var(--primary); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .hero p { font-size: 1.8rem; color: var(--secondary); margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto; font-weight: 400; font-family: 'Dancing Script', cursive; }
 
     /* Cards */
-    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
     .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary); }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-    .card-title { margin: 0.5rem 0; font-size: 1.25rem; font-weight: 700; }
-    .card-meta { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-color: var(--primary); }
+    .card-title { margin: 0.5rem 0; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+    .card-meta { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); font-weight: bold; }
     
     /* Forms & Auth */
     .form-group { margin-bottom: 1rem; }
     .form-control { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--input-bg); color: var(--text-main); font-family: inherit; }
-    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
-    label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; display: block; }
+    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2); }
+    label { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; display: block; color: var(--secondary); }
     
-    /* NEW AUTH STYLES */
     .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 200px); padding: 2rem 1rem; }
     .auth-card { 
         width: 100%; max-width: 420px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 1rem; 
-        padding: 2.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+        padding: 2.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); 
         position: relative; overflow: hidden; 
     }
-    .auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(to right, var(--primary), var(--secondary)); }
+    .auth-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(to right, var(--primary), var(--accent)); }
     .auth-header { text-align: center; margin-bottom: 2rem; }
     .auth-title { font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; }
     .auth-subtitle { color: var(--text-muted); font-size: 0.95rem; }
     .auth-footer { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem; color: var(--text-muted); }
     .auth-footer a { color: var(--primary); font-weight: 600; text-decoration: none; transition: color 0.2s; }
-    .auth-footer a:hover { text-decoration: underline; color: var(--primary-dark); }
+    .auth-footer a:hover { text-decoration: underline; }
 
     /* Admin Badge */
-    .badge-admin { background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid #fcd34d; margin-left: 5px; }
-    .badge-tag { background: var(--bg); padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; border: 1px solid var(--border); }
+    .badge-admin { background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 5px; letter-spacing: 1px; }
+    .badge-tag { background: var(--input-bg); color: var(--secondary); padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; border: 1px solid var(--border); }
 
     /* Chatbot Styles */
     .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-    .chat-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .chat-win { position: absolute; bottom: 80px; right: 0; width: 300px; height: 400px; background: var(--chat-bg); border: 1px solid var(--border); border-radius: 12px; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-    .chat-head { background: var(--primary); color: white; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; }
+    .chat-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: #050505; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .chat-win { position: absolute; bottom: 80px; right: 0; width: 300px; height: 400px; background: var(--chat-bg); border: 1px solid var(--border); border-radius: 12px; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+    .chat-head { background: var(--primary); color: #050505; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; }
     .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
     .chat-msg { padding: 8px 12px; border-radius: 8px; max-width: 85%; font-size: 0.9rem; }
-    .msg-bot { background: var(--chat-bot); color: var(--chat-text-bot); align-self: flex-start; }
-    .msg-user { background: var(--chat-user); color: white; align-self: flex-end; }
+    .msg-bot { background: var(--chat-bot); color: var(--chat-text-bot); align-self: flex-start; border: 1px solid var(--border); }
+    .msg-user { background: var(--chat-user); color: #050505; align-self: flex-end; font-weight: 500; }
     .chat-foot { padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 5px; background: var(--input-bg); }
     
     .alert { padding: 1rem; margin-bottom: 1rem; border-radius: 0.5rem; font-weight: 500; }
-    .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-    .alert-success { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .alert-error { background: #3d0000; color: #ffcccc; border: 1px solid var(--accent); }
+    .alert-success { background: #003300; color: #ccffcc; border: 1px solid var(--success); }
+    
+    .empty-state { text-align: center; padding: 6rem 1rem; color: var(--text-muted); }
 </style>
 """
 
@@ -148,7 +198,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // THEME LOGIC
     const btn = document.getElementById('theme-toggle');
     const html = document.documentElement;
-    const saved = localStorage.getItem('theme') || 'light';
+    // Default to 'dark' for this palette
+    const saved = localStorage.getItem('theme') || 'dark';
     html.setAttribute('data-theme', saved);
     btn.textContent = saved === 'light' ? '🌙' : '☀️';
     btn.addEventListener('click', () => {
@@ -216,7 +267,7 @@ def render_page(content, hero_html=""):
     return f"""
     <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>ClubHub</title>{STYLES}</head>
     <body>
-        <nav class="nav"><div class="nav-container"><a href="/" class="nav-brand">{logo_svg} ClubHub</a><div class="nav-links">{nav_links}<button id="theme-toggle" style="background:none;border:none;cursor:pointer;font-size:1.2rem;">🌙</button></div></div></nav>
+        <nav class="nav"><div class="nav-container"><a href="/" class="nav-brand">{logo_svg} ClubHub</a><div class="nav-links">{nav_links}<button id="theme-toggle" style="background:none;border:none;cursor:pointer;font-size:1.2rem;">☀️</button></div></div></nav>
         <div class="main-content">{hero_html}<div class="container" style="margin-top:2rem;">{msgs_html}</div>{content}</div>
         <div style="text-align:center; padding:3rem; color:var(--text-muted);">&copy; 2025 ClubHub</div>
         
@@ -294,7 +345,7 @@ def clubs():
         del_btn = ""
         if role == 'admin':
             del_btn = f"""<div style="margin-top:1rem; border-top:1px solid var(--border); padding-top:1rem;"><form action="/delete_club/{c['name']}" method="POST" onsubmit="return confirm('Delete club?');"><button class="btn btn-danger">Delete Club</button></form></div>"""
-        html += f"""<div class="card"><h3 class="card-title">{c['name']}</h3><p>{c['description']}</p><small>Leader: {c['leader']}</small>{del_btn}</div>"""
+        html += f"""<div class="card"><h3 class="card-title">{c['name']}</h3><p>{c['description']}</p><small style="color:var(--secondary);">Leader: {c['leader']}</small>{del_btn}</div>"""
     return render_page(html + '</div></div>')
 
 @app.route('/chat', methods=['POST'])
@@ -357,7 +408,6 @@ def signup():
             flash('Account created', 'success')
             return redirect('/login')
     
- 
     return render_page("""
     <div class="auth-wrapper">
         <div class="auth-card">
